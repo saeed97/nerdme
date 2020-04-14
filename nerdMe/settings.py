@@ -121,10 +121,11 @@ SECURE_SSL_REDIRECT = False
 
 STATIC_URL = '/static/'
 
+LOGIN_REDIRECT_URL = '/profile/'
 
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
-MEDIA_ROOT = BASE_DIR + '/groups/'
-MEDIA_URL = '/groups/'
+MEDIA_ROOT = BASE_DIR + '/media/'
+MEDIA_URL = '/media/'
 # # Template directory setting
 # TEMPLATE_DIRS = (
 #     os.path.join(os.path.dirname(__file__), 'templates'),

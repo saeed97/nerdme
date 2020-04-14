@@ -1,49 +1,61 @@
-
-{% load static  %}
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+{% load static %}
+    <head>
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="{% static 'user_header/styles.css' %}">
+      <!------ Include the above in your HEAD tag ---------->
+    </head>
+    <body>
+      <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-
-
-    <!-- Core Stylesheet -->
-    <link href="{% static 'css/style.css' %}"  rel="stylesheet">
-    
-    <!-- Responsive CSS -->
-    <link href="{% static 'css/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
-    <style>
-    body {
-        background-image: url("paper.gif");
-        background-color: #cccccc;
-       }
-    #wow{
-        background-color: #2a5d86;
-        padding: 20px;
-    }
-       </style>
-   
-</head>
-<body>
-<div id='wow'>
-    Here is the header
-    <a href="{% url 'index' %}">Home </a>
-    <a href="{% url 'login' %}">login </a>
-    <a href="{% url 'register' %}">register </a>
-    <a href="{% url 'contact' %}">contact </a>
-
-</div>
-    <!-- jQuery-2.2.4 js -->
-    <script src="{% static 'js/jquery/jquery-2.2.4.min.js' %}"></script>
-    <!-- Popper js -->
-    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
-    <!-- Bootstrap-4 js -->
-    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
-    <!-- All Plugins js -->
-    <script src="{% static 'js/others/plugins.js' %}"></script>
-    <!-- Active JS
-    <script src="{% static 'js/active.js' %}"></script> -->
-</body>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">
+                <i class="fa fa-home"></i>
+                Home
+                <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'view_edit_profile' %}">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                Edit
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">
+                <i class="fa fa-users" aria-hidden="true"></i>
+                Groups
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-envelope-o"></i>
+                Request
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav ">
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </ul>
+        </div>
+      </nav>
+    </body>
 </html>
