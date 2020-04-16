@@ -1,0 +1,30 @@
+{% extends "groups/base.html" %}
+
+{% block title %}Search results{% endblock %}
+{% block content_title %}<h2 class="page_title">Search</h2>{% endblock %}
+
+{% block content %}
+  {% if found_Groups %}
+  <h2>{{found_Groups.count}} search results for term: "{{ query_string }}"</h2>
+  <div class="post_list">
+    {% for f in found_Groups %}
+    <p>
+      <strong>
+        <a href="{% url 'groups:group_detail' f.id %}">{{ f.title }}</a>
+      </strong>
+      <br />
+      <span class="minor">
+        In list:
+        <a href="{% url 'groups:list_detail' f.group_list.id f.group_list.slug %}">
+          {{ f.group_list.name }}
+        </a>
+        <br /> Assigned to: {% if f.assigned_to %}{{ f.assigned_to }}{% else %}Anyone{% endif %}
+        <br /> Complete: {{ f.completed|yesno:"Yes,No" }}
+      </span>
+    </p>
+    {% endfor %}
+  </div>
+  {% else %}
+    <h2> No results to show, sorry.</h2>
+  {% endif %}
+{% endblock %}

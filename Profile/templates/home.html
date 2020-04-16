@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='row'>
+<div class='col-12'>
+<h6>Email: {{user.email}}</h6>
+<h6>Location: {{user.location}}</h6>
+<h6>About Me: {{user.aboutme}}</h6>
+<h6>Major: {{user.major.value}}</h6>
+<h6>Graduation Date: {{user.GraduationDate}}</h6>
+{% if user.image %}
+ <img src='{{ user.image.url }}' />
+{% endif %}
+
+{% endblock %}

@@ -1,56 +1,87 @@
-#!/home/stepsizestrategies/.local/bin/python3
-# -*- coding: utf-8 -*-
-
 from django import forms
-from django.contrib.auth import authenticate
-
-from django.contrib.auth.models import User
-
-
+from django.contrib.auth.models import Group
+from django.forms import ModelForm
+from groups.models import group, groupList
 
 
+class AddgroupListForm(ModelForm):
+    """The picklist showing allowable groups to which a new list can be added
+    determines which groups the user belongs to. This queries the form object
+    to derive that list."""
+
+    def __init__(self, user, *args, **kwargs):
+        super(AddgroupListForm, self).__init__(*args, **kwargs)
+        self.fields["group"].queryset = Group.objects.filter(user=user)
+        self.fields["group"].widget.attrs = {
+            "id": "id_group",
+            "class": "custom-select mb-3",
+            "name": "group",
+        }
+
+    class Meta:
+        model = groupList
+        exclude = ["created_date", "slug"]
 
 
+class AddEditgroupForm(ModelForm):
+    """The picklist showing the users to which a new group can be assigned
+    must find other members of the group this groupList is attached to."""
 
-class LoginForm(forms.Form):
-    username = forms.CharField(max_length=100, label='Username')
-    password = forms.CharField(max_length=100, label='Password', widget=forms.PasswordInput)
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        group_list = kwargs.get("initial").get("group_list")
+        members = group_list.group.user_set.all()
+        self.fields["assigned_to"].queryset = members
+        self.fields["assigned_to"].label_from_instance = lambda obj: "%s (%s)" % (
+            obj.get_full_name(),
+            obj.username,
+        )
+        self.fields["assigned_to"].widget.attrs = {
+            "id": "id_assigned_to",
+            "class": "custom-select mb-3",
+            "name": "assigned_to",
+        }
+        self.fields["group_list"].value = kwargs["initial"]["group_list"].id
 
-    def clean(self):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if not user:
-                raise forms.ValidationError("invalid entrance!")
-        return super(LoginForm, self).clean()
+    due_date = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}), required=False)
 
+    title = forms.CharField(widget=forms.widgets.TextInput())
 
-class RegisterForm(forms.ModelForm):
-       username = forms.CharField(max_length=100, label='username')
-       password = forms.CharField(max_length=100, label='password', widget=forms.PasswordInput)
-       class Meta:
-           model = User
-           fields =[
-               'username',
-               'first_name',
-               'last_name',
-               'email',
+    note = forms.CharField(widget=forms.Textarea(), required=False)
 
+    completed = forms.BooleanField(required=False)
 
+    def clean_created_by(self):
+        """Keep the existing created_by regardless of anything coming from the submitted form.
+        If creating a new group, then created_by will be None, but we set it before saving."""
+        return self.instance.created_by
 
-
-               ]
-
-
-
-
-
-
-
-
+    class Meta:
+        model = group
+        exclude = []
 
 
+class AddExternalgroupForm(ModelForm):
+    """Form to allow users who are not part of the GTD system to file a ticket."""
+
+    title = forms.CharField(widget=forms.widgets.TextInput(attrs={"size": 35}), label="Summary")
+    note = forms.CharField(widget=forms.widgets.Textarea(), label="Problem Description")
+    priority = forms.IntegerField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = group
+        exclude = (
+            "group_list",
+            "created_date",
+            "due_date",
+            "created_by",
+            "assigned_to",
+            "completed",
+            "completed_date",
+        )
 
 
+class SearchForm(forms.Form):
+    """Search."""
 
+    q = forms.CharField(widget=forms.widgets.TextInput(attrs={"size": 35}))

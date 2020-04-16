@@ -1,0 +1,16 @@
+A new group comment has been added.
+
+group: {{ group.title }}
+Commenter: {{ user.first_name }} {{ user.last_name }}
+
+Comment:
+{% autoescape off %}
+{{ body }}
+{% endautoescape %}
+
+group details/members:
+https://{{ site }}{% url 'groups:group_detail' group.id %}
+
+List {{ group.group_list.name }}:
+https://{{ site }}{% url 'groups:list_detail' group.group_list.id group.group_list.slug %}
+

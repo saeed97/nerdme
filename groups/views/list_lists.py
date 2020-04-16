@@ -1,0 +1,54 @@
+import datetime
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse
+from django.shortcuts import render
+
+from groups.forms import SearchForm
+from groups.models import group, groupList
+from groups.utils import staff_check
+
+
+@login_required
+@user_passes_test(staff_check)
+def list_lists(request) -> HttpResponse:
+    """Homepage view - list of lists a user can view, and ability to add a list.
+    """
+
+    thedate = datetime.datetime.now()
+    searchform = SearchForm(auto_id=False)
+
+    # Make sure user belongs to at least one group.
+    if not request.user.groups.all().exists():
+        messages.warning(
+            request,
+            "You do not yet belong to any groups. Ask your administrator to add you to one.",
+        )
+
+    # Superusers see all lists
+    lists = groupList.objects.all().order_by("group__name", "name")
+    if not request.user.is_superuser:
+        lists = lists.filter(group__in=request.user.groups.all())
+
+    list_count = lists.count()
+
+    # superusers see all lists, so count shouldn't filter by just lists the admin belongs to
+    if request.user.is_superuser:
+        group_count = group.objects.filter(completed=0).count()
+    else:
+        group_count = (
+            group.objects.filter(completed=0)
+            .filter(group_list__group__in=request.user.groups.all())
+            .count()
+        )
+
+    context = {
+        "lists": lists,
+        "thedate": thedate,
+        "searchform": searchform,
+        "list_count": list_count,
+        "group_count": group_count,
+    }
+
+    return render(request, "groups/list_lists.html", context)

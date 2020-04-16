@@ -1,0 +1,1 @@
+A new group has been assigned to you - {% autoescape off %}{{ group.title }}{% endautoescape %}

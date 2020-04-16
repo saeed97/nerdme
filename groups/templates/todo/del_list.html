@@ -1,0 +1,33 @@
+{% extends "groups/base.html" %}
+{% block title %}Delete list{% endblock %}
+
+{% block content %}
+  {% if user.is_staff %}
+  <h1>Delete entire list: {{ group_list.name }} ?</h1>
+
+  <p>Category tally:</p>
+
+  <ul>
+    <li>Incomplete: {{ group_count_undone }} </li>
+    <li>Complete: {{ group_count_done }} </li>
+    <li>
+      <strong>Total: {{ group_count_total }}</strong>
+    </li>
+  </ul>
+
+  <p> ... all of which will be irretrievably
+    <strong>blown away</strong>. Are you sure you want to do that?</p>
+
+  <form action="" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <input type="hidden" name="group_list" value="{{ group_list.id }}">
+    <p>
+      <a href="{% url 'groups:list_detail' group_list.id group_list.slug %}" class="btn btn-success">Return to list: {{ group_list.name }}</a>
+      <input type="submit" name="delete-confirm" value="Do it! &rarr;" class="btn btn-danger">
+    </p>
+  </form>
+
+
+{% else %}
+  <p>Sorry, you don't have permission to delete lists. Please contact your group administrator.</p>
+{% endif %} {% endblock %}

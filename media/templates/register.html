@@ -1,0 +1,53 @@
+﻿{% load static  %}
+{% include "includes/header.html" %}
+<br/><br/><br/><br/>
+<div class="container" align="center">
+
+   
+    <div style="text-align: left; padding-left: 3%; width: 400px;"> <!-- Log in zone -->
+        <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+         {% csrf_token %}
+     {% if next %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title" align="center">Register</h3>
+                </div>
+                <div class="panel-body"align="center">
+                    <div class="form-group has-primary">
+                        {% csrf_token %}
+                         <input type="text" id="username" name="username" placeholder="Username" class="form-control" ><br/><br/>
+
+                        <input type="text" name="first_name" id="first_name" placeholder="First Name" class="form-control"><br/><br/>
+
+                         <input type="text" id="last_name" name="last_name" placeholder="Last Name" class="form-control" ><br/><br/>
+                        
+                         
+                        
+                         <input type="text" id="email" name="email" placeholder="Email" class="form-control" ><br/><br/>
+                      
+                         <input type="password" name="password" id="password" placeholder="Password" class="form-control"><br/><br/>
+                       
+
+
+                        <button type="submit" class="btn btn-primary">Register</button><br/><br/>
+                    </div>
+               
+                </div>
+            </div>
+
+        </form>
+        </div>
+
+  
+
+</div>
+
+
+
+<script src="/static/graphics/js/jquery.min.js"></script>
+<script src="/static/graphics/js/bootstrap.min.js"></script>
+<script src="/static/graphics/js/respond.min.js"></script>
+<script src="/static/graphics/js/bodypadding.js"></script>

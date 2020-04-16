@@ -1,0 +1,73 @@
+{% url 'home' as home_url %}
+{% url 'contact' as contact_url %}
+
+{% url 'login' as login_url %}
+{% url 'logout' as logout_url %}
+{% url 'register' as register_url %}
+{% url 'Profile:home' as profile_url%}
+{% url 'account:home' as account_url %}
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+   <div class='container'>
+  <a class="navbar-brand" href="{{ home_url }}">
+    <img src="//getbootstrap.com/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+    {% if brand_name %} {{brand_name }} {% else %}CFE nerdMe {% endif %}
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item {% if request.path == home_url %}active{% endif %}">
+      <a class="nav-link" href="{{ home_url }}">Groups <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item {% if request.path == contact_url %}active{% endif %}">
+        <a class="nav-link" href="{{ contact_url }}">Contact<span class="sr-only">(current)</span></a>
+      </li>
+       {% if request.user.is_authenticated %}
+      <li class="nav-item {% if request.path == profile_url %}active{% endif %}">
+        <a class="nav-link" href="{{ profile_url }}">Profile<span class="sr-only">(current)</span></a>
+      </li>
+
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Account<span class="sr-only">(current)</span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          {% comment %} <a class="dropdown-item {% if request.path == account_url %}active{% endif %}" href="{{ account_url }}">Home</a> {% endcomment %}
+          <a class="dropdown-item" href='{% url "account:user-update" %}'>Update Account</a>
+          <a class="dropdown-item" href='{% url "Profile:update" %}'>Update Profile</a>
+          <a class='dropdown-item' href='{% url "password_change" %}'>Change Password</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{{ logout_url }}">Logout</a>
+        </div>
+      </li>
+      {% else %}
+       <li class="nav-item {% if request.path == register_url %}active{% endif %}">
+        <a class="nav-link" href="{{ register_url }}">Register</a>
+      </li>
+      <li class="nav-item {% if request.path == login_url %}active{% endif %}">
+        <a class="nav-link" href="{{ login_url }}">Login</a>
+      </li>
+      {% endif %}
+     
+
+       <!--  <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dropdown link
+            </a>
+            <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li> -->
+
+    </ul>
+    {% comment %} {% include 'search/snippets/search-form.html' %} {% endcomment %}
+  </div>
+</div>
+</nav>
