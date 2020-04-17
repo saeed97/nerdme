@@ -14,7 +14,7 @@ from django.urls import reverse
 from groups.defaults import defaults
 from groups.features import HAS_group_MERGE
 from groups.forms import AddEditgroupForm
-from groups.models import Attachment, Comment, group
+from groups.models import Attachment, Comment, StudentsGroups
 from groups.utils import (
     send_email_to_thread_participants,
     staff_check,

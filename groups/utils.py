@@ -9,7 +9,8 @@ from django.core import mail
 from django.template.loader import render_to_string
 
 from groups.defaults import defaults
-from groups.models import Attachment, Comment, group
+from groups.models import Attachment, Comment
+from groups.models import StudentsGroups as group
 
 log = logging.getLogger(__name__)
 

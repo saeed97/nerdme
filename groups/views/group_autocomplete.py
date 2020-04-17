@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from groups.models import group
+from groups.models import groStudentsGroupsup
 from groups.utils import user_can_read_group
 
 

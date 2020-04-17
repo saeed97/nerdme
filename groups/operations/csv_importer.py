@@ -6,7 +6,8 @@ import logging
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
-from groups.models import group, groupList
+from groups.models import  groupList
+from groups.models import StudentsGroups as group
 
 log = logging.getLogger(__name__)
 

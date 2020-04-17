@@ -1,9 +1,10 @@
 from django.contrib import admin
 
-from groups.models import Attachment, Comment, group, groupList
+from groups.models import Attachment, Comment, groupList
+from groups.models import StudentsGroups 
 
 
-class groupAdmin(admin.ModelAdmin):
+class StudentGroupadmin(admin.ModelAdmin):
     list_display = ("title", "group_list", "completed", "priority", "due_date")
     list_filter = ("group_list",)
     ordering = ("priority",)
@@ -21,5 +22,5 @@ class AttachmentAdmin(admin.ModelAdmin):
 
 admin.site.register(groupList)
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(group, groupAdmin)
+admin.site.register(StudentsGroups, StudentGroupadmin)
 admin.site.register(Attachment, AttachmentAdmin)

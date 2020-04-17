@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from groups.models import group, groupList
+from groups.models import StudentsGroups, groupList
 from groups.utils import staff_check
 
 

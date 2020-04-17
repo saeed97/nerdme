@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 
-from groups.models import group
+from groups.models import StudentsGroups
 from groups.utils import toggle_group_completed
 from groups.utils import staff_check
 

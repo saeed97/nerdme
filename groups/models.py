@@ -68,7 +68,7 @@ class groupList(models.Model):
         unique_together = ("_group", "slug")
 
 
-class group(models.Model):
+class StudentsGroups(models.Model):
     title = models.CharField(max_length=140)
     group_list = models.ForeignKey(groupList, on_delete=models.CASCADE, null=True)
     created_date = models.DateField(default=timezone.now, blank=True, null=True)
@@ -109,7 +109,7 @@ class group(models.Model):
         # If group is being marked complete, set the completed_date
         if self.completed:
             self.completed_date = datetime.datetime.now()
-        super(group, self).save()
+        super(StudentsGroups, self).save()
 
     def merge_into(self, merge_target):
         if merge_target.pk == self.pk:
@@ -135,7 +135,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True
     )
-    group = models.ForeignKey(group, on_delete=models.CASCADE)
+    group = models.ForeignKey(StudentsGroups, on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.datetime.now)
     email_from = models.CharField(max_length=320, blank=True, null=True)
     email_message_id = models.CharField(max_length=255, blank=True, null=True)
@@ -169,7 +169,7 @@ class Attachment(models.Model):
     Defines a generic file attachment for use in M2M relation with group.
     """
 
-    group = models.ForeignKey(group, on_delete=models.CASCADE)
+    group = models.ForeignKey(StudentsGroups, on_delete=models.CASCADE)
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     file = models.FileField(upload_to=get_attachment_upload_dir, max_length=255)

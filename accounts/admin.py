@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import GroupAdmin
 
+from django.db import models
 
 
 from .forms import UserAdminCreationForm, UserAdminChangeForm
@@ -42,8 +44,19 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 
+# class Group(models.Model):
+#     name = models.CharField(max_length=128)
+#     members = models.ManyToManyField(UserAdmin, related_name='groups')
+# class MembershipInline(admin.TabularInline):
+#     model = Group.members.through
+# class GroupAdmin(admin.ModelAdmin):
+#     inlines = [
+#         MembershipInline,
+#     ]
+   
 # Remove Group Model from admin. We're not using it.
 admin.site.unregister(Group)
+admin.site.register(Group)
 
 
 

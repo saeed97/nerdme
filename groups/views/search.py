@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from groups.models import group
+from groups.models import StudentsGroups
 from groups.utils import staff_check
 
 

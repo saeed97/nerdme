@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from groups.forms import SearchForm
-from groups.models import group, groupList
+from groups.models import StudentsGroups, groupList
 from groups.utils import staff_check
 
 

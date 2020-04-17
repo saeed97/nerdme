@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from groups.forms import AddEditgroupForm
-from groups.models import group, groupList
+from groups.models import StudentsGroups, groupList
 from groups.utils import send_notify_mail, staff_check
 
 

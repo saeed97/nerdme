@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group
 from django.forms import ModelForm
-from groups.models import group, groupList
+from groups.models import StudentsGroups, groupList
 
 
 class AddgroupListForm(ModelForm):
@@ -57,7 +57,7 @@ class AddEditgroupForm(ModelForm):
         return self.instance.created_by
 
     class Meta:
-        model = group
+        model = StudentsGroups
         exclude = []
 
 
@@ -69,7 +69,7 @@ class AddExternalgroupForm(ModelForm):
     priority = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
-        model = group
+        model = StudentsGroups
         exclude = (
             "group_list",
             "created_date",

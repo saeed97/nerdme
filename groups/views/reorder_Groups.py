@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from groups.models import group
+from groups.models import StudentsGroups
 from groups.utils import staff_check
 
 
