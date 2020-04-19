@@ -1,12 +1,12 @@
 from groups.views.add_list import add_list  # noqa: F401
 from groups.views.del_list import del_list  # noqa: F401
-from groups.views.delete_group import delete_group  # noqa: F401
+from groups.views.delete_task import delete_task  # noqa: F401
 from groups.views.external_add import external_add  # noqa: F401
 from groups.views.import_csv import import_csv  # noqa: F401
 from groups.views.list_detail import list_detail  # noqa: F401
 from groups.views.list_lists import list_lists  # noqa: F401
 from groups.views.remove_attachment import remove_attachment  # noqa: F401
-from groups.views.reorder_Groups import reorder_Groups  # noqa: F401
+from groups.views.reorder_tasks import reorder_tasks  # noqa: F401
 from groups.views.search import search  # noqa: F401
-from groups.views.group_detail import group_detail  # noqa: F401
+from groups.views.task_detail import task_detail  # noqa: F401
 from groups.views.toggle_done import toggle_done  # noqa: F401

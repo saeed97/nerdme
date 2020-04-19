@@ -3,14 +3,14 @@ import random
 import os
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from accounts.models import User
-from accounts.models import GuestEmail
+from django.contrib.auth.models import  User
+
 
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.urls import reverse
-User = settings.AUTH_USER_MODEL
+# User = settings.AUTH_USER_MODEL
 
 import stripe
 STRIPE_SECRET_KEY = getattr(settings, "STRIPE_SECRET_KEY", "sk_test_cu1lQmcg1OLffhLvYrSCp5XE")

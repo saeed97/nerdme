@@ -5,37 +5,37 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 
-from groups.models import StudentsGroups
+from groups.models import Task
 from groups.utils import staff_check
 
 
 @login_required
 @user_passes_test(staff_check)
-def delete_group(request, group_id: int) -> HttpResponse:
-    """Delete specified group.
-    Redirect to the list from which the group came.
+def delete_task(request, task_id: int) -> HttpResponse:
+    """Delete specified task.
+    Redirect to the list from which the task came.
     """
 
     if request.method == "POST":
-        group = get_object_or_404(group, pk=group_id)
+        task = get_object_or_404(Task, pk=task_id)
 
         redir_url = reverse(
             "groups:list_detail",
-            kwargs={"list_id": group.group_list.id, "list_slug": group.group_list.slug},
+            kwargs={"list_id": task.task_list.id, "list_slug": task.task_list.slug},
         )
 
         # Permissions
         if not (
-            (group.created_by == request.user)
+            (task.created_by == request.user)
             or (request.user.is_superuser)
-            or (group.assigned_to == request.user)
-            or (group.group_list.group in request.user.groups.all())
+            or (task.assigned_to == request.user)
+            or (task.task_list.group in request.user.groups.all())
         ):
             raise PermissionDenied
 
-        group.delete()
+        task.delete()
 
-        messages.success(request, "group '{}' has been deleted".format(group.title))
+        messages.success(request, "Task '{}' has been deleted".format(task.title))
         return redirect(redir_url)
 
     else:

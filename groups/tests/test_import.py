@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from django.contrib.auth import get_user_model
 
-from groups.models import group, groupList
+from groups.models import Task, TaskList
 from groups.operations.csv_importer import CSVImporter
 
 
@@ -29,14 +29,14 @@ def import_setup(groups_setup):
 @pytest.mark.django_db
 def test_setup(groups_setup):
     """Confirm what we should have from conftest, prior to importing CSV."""
-    assert groupList.objects.all().count() == 2
-    assert group.objects.all().count() == 6
+    assert TaskList.objects.all().count() == 2
+    assert Task.objects.all().count() == 6
 
 
 @pytest.mark.django_db
 def test_import(import_setup):
     """Confirm that importing the CSV gave us two more rows (one should have been skipped)"""
-    assert group.objects.all().count() == 8  # 2 out of 3 rows should have imported; one was an error
+    assert Task.objects.all().count() == 8  # 2 out of 3 rows should have imported; one was an error
 
 
 @pytest.mark.django_db
@@ -57,20 +57,20 @@ def test_report(import_setup):
     )
 
     assert (
-        'Upserted group 7: "Make dinner" in list "Zip" (group "Workgroup One")' in results["upserts"]
+        'Upserted task 7: "Make dinner" in list "Zip" (group "Workgroup One")' in results["upserts"]
     )
     assert (
-        'Upserted group 8: "Bake bread" in list "Zip" (group "Workgroup One")' in results["upserts"]
+        'Upserted task 8: "Bake bread" in list "Zip" (group "Workgroup One")' in results["upserts"]
     )
 
 
 @pytest.mark.django_db
 def test_inserted_row(import_setup):
     """Confirm that one inserted row is exactly right."""
-    group = group.objects.get(title="Make dinner", group_list__name="Zip")
-    assert group.created_by == get_user_model().objects.get(username="u1")
-    assert group.assigned_to == get_user_model().objects.get(username="u1")
-    assert not group.completed
-    assert group.note == "This is note one"
-    assert group.priority == 3
-    assert group.created_date == datetime.datetime.today().date()
+    task = Task.objects.get(title="Make dinner", task_list__name="Zip")
+    assert task.created_by == get_user_model().objects.get(username="u1")
+    assert task.assigned_to == get_user_model().objects.get(username="u1")
+    assert not task.completed
+    assert task.note == "This is note one"
+    assert task.priority == 3
+    assert task.created_date == datetime.datetime.today().date()

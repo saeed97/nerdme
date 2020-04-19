@@ -8,7 +8,7 @@ from groups.operations.csv_importer import CSVImporter
 
 
 class Command(BaseCommand):
-    help = """Import specifically formatted CSV file containing incoming Groups to be loaded.
+    help = """Import specifically formatted CSV file containing incoming tasks to be loaded.
     For specfic format of inbound CSV, see data/import_example.csv.
     For documentation on upsert logic and required fields, see README.md.
     """

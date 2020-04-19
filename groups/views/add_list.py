@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.text import slugify
 
-from groups.forms import AddgroupListForm
+from groups.forms import AddTaskListForm
 from groups.utils import staff_check
 
 
@@ -21,7 +21,7 @@ def add_list(request) -> HttpResponse:
         raise PermissionDenied
 
     if request.POST:
-        form = AddgroupListForm(request.user, request.POST)
+        form = AddTaskListForm(request.user, request.POST)
         if form.is_valid():
             try:
                 newlist = form.save(commit=False)
@@ -39,9 +39,9 @@ def add_list(request) -> HttpResponse:
     else:
         if request.user.groups.all().count() == 1:
             # FIXME: Assuming first of user's groups here; better to prompt for group
-            form = AddgroupListForm(request.user, initial={"group": request.user.groups.all()[0]})
+            form = AddTaskListForm(request.user, initial={"group": request.user.groups.all()[0]})
         else:
-            form = AddgroupListForm(request.user)
+            form = AddTaskListForm(request.user)
 
     context = {"form": form}
 

@@ -13,10 +13,10 @@ from django.utils import timezone
 
 
 def get_attachment_upload_dir(instance, filename):
-    """Determine upload dir for group attachment files.
+    """Determine upload dir for task attachment files.
     """
 
-    return "/".join(["Groups", "attachments", str(instance.group.id), filename])
+    return "/".join(["tasks", "attachments", str(instance.task.id), filename])
 
 
 class LockedAtomicTransaction(Atomic):
@@ -52,25 +52,25 @@ class LockedAtomicTransaction(Atomic):
                     cursor.close()
 
 
-class groupList(models.Model):
+class TaskList(models.Model):
     name = models.CharField(max_length=60)
     slug = models.SlugField(default="")
-    _group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
     class Meta:
         ordering = ["name"]
-        verbose_name_plural = "Sections"
+        verbose_name_plural = "Departments"
 
         # Prevents (at the database level) creation of two lists with the same slug in the same group
-        unique_together = ("_group", "slug")
+        unique_together = ("group", "slug")
 
 
-class StudentsGroups(models.Model):
+class Task(models.Model):
     title = models.CharField(max_length=140)
-    group_list = models.ForeignKey(groupList, on_delete=models.CASCADE, null=True)
+    task_list = models.ForeignKey(TaskList, on_delete=models.CASCADE, null=True)
     created_date = models.DateField(default=timezone.now, blank=True, null=True)
     due_date = models.DateField(blank=True, null=True)
     completed = models.BooleanField(default=False)
@@ -94,7 +94,7 @@ class StudentsGroups(models.Model):
 
     # Has due date for an instance of this object passed?
     def overdue_status(self):
-        "Returns whether the Groups's due date has passed or not."
+        "Returns whether the Tasks's due date has passed or not."
         if self.due_date and datetime.date.today() > self.due_date:
             return True
 
@@ -102,40 +102,41 @@ class StudentsGroups(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("groups:group_detail", kwargs={"group_id": self.id})
+        return reverse("groups:task_detail", kwargs={"task_id": self.id})
 
-    # Auto-set the group creation / completed date
+    # Auto-set the Task creation / completed date
     def save(self, **kwargs):
-        # If group is being marked complete, set the completed_date
+        # If Task is being marked complete, set the completed_date
         if self.completed:
             self.completed_date = datetime.datetime.now()
-        super(StudentsGroups, self).save()
+        super(Task, self).save()
 
     def merge_into(self, merge_target):
         if merge_target.pk == self.pk:
-            raise ValueError("can't merge a group with self")
+            raise ValueError("can't merge a task with self")
 
-        # lock the members to avoid concurrent additions of members after the
-        # update request. these members would be irremediably lost because of
+        # lock the comments to avoid concurrent additions of comments after the
+        # update request. these comments would be irremediably lost because of
         # the cascade clause
         with LockedAtomicTransaction(Comment):
-            Comment.objects.filter(group=self).update(group=merge_target)
+            Comment.objects.filter(task=self).update(task=merge_target)
             self.delete()
 
     class Meta:
         ordering = ["priority", "created_date"]
+        verbose_name_plural = "Students Groups"
 
 
 class Comment(models.Model):
     """
-    Not using Django's built-in members because we want to be able to save
-    a comment and change group details at the same time. Rolling our own since it's easy.
+    Not using Django's built-in comments because we want to be able to save
+    a comment and change task details at the same time. Rolling our own since it's easy.
     """
 
-    author = models.ForeignKey(
+    member = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True
     )
-    group = models.ForeignKey(StudentsGroups, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.datetime.now)
     email_from = models.CharField(max_length=320, blank=True, null=True)
     email_message_id = models.CharField(max_length=255, blank=True, null=True)
@@ -143,13 +144,14 @@ class Comment(models.Model):
     body = models.TextField(blank=True)
 
     class Meta:
-        # an email should only appear once per group
-        unique_together = ("group", "email_message_id")
+        # an email should only appear once per task
+        unique_together = ("task", "email_message_id")
+        verbose_name_plural = "Members"
 
     @property
-    def author_text(self):
-        if self.author is not None:
-            return str(self.author)
+    def member_text(self):
+        if self.member is not None:
+            return str(self.member)
 
         assert self.email_message_id is not None
         return str(self.email_from)
@@ -158,7 +160,7 @@ class Comment(models.Model):
     def snippet(self):
         body_snippet = textwrap.shorten(self.body, width=35, placeholder="...")
         # Define here rather than in __str__ so we can use it in the admin list_display
-        return "{author} - {snippet}...".format(author=self.author_text, snippet=body_snippet)
+        return "{member} - {snippet}...".format(member=self.member_text, snippet=body_snippet)
 
     def __str__(self):
         return self.snippet
@@ -166,10 +168,10 @@ class Comment(models.Model):
 
 class Attachment(models.Model):
     """
-    Defines a generic file attachment for use in M2M relation with group.
+    Defines a generic file attachment for use in M2M relation with Task.
     """
 
-    group = models.ForeignKey(StudentsGroups, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     file = models.FileField(upload_to=get_attachment_upload_dir, max_length=255)
@@ -182,4 +184,4 @@ class Attachment(models.Model):
         return extension
 
     def __str__(self):
-        return f"{self.group.id} - {self.file.name}"
+        return f"{self.task.id} - {self.file.name}"

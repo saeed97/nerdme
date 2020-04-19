@@ -23,7 +23,9 @@ from django.contrib.auth.views import LogoutView
 from django.views.generic import TemplateView, RedirectView
 
 
-from accounts.views import LoginView, RegisterView, GuestRegisterView
+# from accounts.views import LoginView, RegisterView, GuestRegisterView
+from accounts.views import LoginView, RegisterView
+
 
 
 
@@ -38,7 +40,7 @@ urlpatterns = [
     url(r'^accounts/', include("accounts.passwords.urls")),
     url(r'^contact/$', contact_page, name='contact'),
     url(r'^login/$', LoginView.as_view(), name='login'),
-    url(r'^register/guest/$', GuestRegisterView.as_view(), name='guest_register'),
+    # url(r'^register/guest/$', GuestRegisterView.as_view(), name='guest_register'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url(r'^register/$', RegisterView.as_view(), name='register'),
     url(r'^profile/', include(("Profile.urls",'Profile'), namespace='Profile')),

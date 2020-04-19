@@ -1,5 +1,5 @@
 """
-A multi-user, multi-group group management and assignment system for Django.
+A multi-user, multi-group task management and assignment system for Django.
 """
 __version__ = "2.4.10"
 

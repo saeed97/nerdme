@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from groups.forms import SearchForm
-from groups.models import StudentsGroups, groupList
+from groups.models import Task, TaskList
 from groups.utils import staff_check
 
 
@@ -27,7 +27,7 @@ def list_lists(request) -> HttpResponse:
         )
 
     # Superusers see all lists
-    lists = groupList.objects.all().order_by("group__name", "name")
+    lists = TaskList.objects.all().order_by("group__name", "name")
     if not request.user.is_superuser:
         lists = lists.filter(group__in=request.user.groups.all())
 
@@ -35,11 +35,11 @@ def list_lists(request) -> HttpResponse:
 
     # superusers see all lists, so count shouldn't filter by just lists the admin belongs to
     if request.user.is_superuser:
-        group_count = group.objects.filter(completed=0).count()
+        task_count = Task.objects.filter(completed=0).count()
     else:
-        group_count = (
-            group.objects.filter(completed=0)
-            .filter(group_list__group__in=request.user.groups.all())
+        task_count = (
+            Task.objects.filter(completed=0)
+            .filter(task_list__group__in=request.user.groups.all())
             .count()
         )
 
@@ -48,7 +48,7 @@ def list_lists(request) -> HttpResponse:
         "thedate": thedate,
         "searchform": searchform,
         "list_count": list_count,
-        "group_count": group_count,
+        "task_count": task_count,
     }
 
     return render(request, "groups/list_lists.html", context)

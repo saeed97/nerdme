@@ -3,25 +3,25 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from groups.models import groStudentsGroupsup
-from groups.utils import user_can_read_group
+from groups.models import Task
+from groups.utils import user_can_read_task
 
 
-class groupAutocomplete(autocomplete.Select2QuerySetView):
+class TaskAutocomplete(autocomplete.Select2QuerySetView):
     @method_decorator(login_required)
-    def dispatch(self, request, group_id, *args, **kwargs):
-        self.group = get_object_or_404(group, pk=group_id)
-        if not user_can_read_group(self.group, request.user):
+    def dispatch(self, request, task_id, *args, **kwargs):
+        self.task = get_object_or_404(Task, pk=task_id)
+        if not user_can_read_task(self.task, request.user):
             raise PermissionDenied
 
-        return super().dispatch(request, group_id, *args, **kwargs)
+        return super().dispatch(request, task_id, *args, **kwargs)
 
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
         if not self.request.user.is_authenticated:
-            return group.objects.none()
+            return Task.objects.none()
 
-        qs = group.objects.filter(group_list=self.group.group_list).exclude(pk=self.group.pk)
+        qs = Task.objects.filter(task_list=self.task.task_list).exclude(pk=self.task.pk)
 
         if self.q:
             qs = qs.filter(title__istartswith=self.q)

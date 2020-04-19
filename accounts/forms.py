@@ -3,51 +3,54 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
+
 
 User = get_user_model()
 
-from .models import EmailActivation, GuestEmail
+# from .models import EmailActivation, GuestEmail
 
 
-class ReactivateEmailForm(forms.Form):
-    email       = forms.EmailField()
+# class ReactivateEmailForm(forms.Form):
+#     email       = forms.EmailField()
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        qs = EmailActivation.objects.email_exists(email) 
-        if not qs.exists():
-            register_link = reverse("register")
-            msg = """This email does not exists, would you like to <a href="{link}">register</a>?
-            """.format(link=register_link)
-            raise forms.ValidationError(mark_safe(msg))
-        return email
+#     def clean_email(self):
+#         email = self.cleaned_data.get('email')
+#         qs = EmailActivation.objects.email_exists(email) 
+#         if not qs.exists():
+#             register_link = reverse("register")
+#             msg = """This email does not exists, would you like to <a href="{link}">register</a>?
+#             """.format(link=register_link)
+#             raise forms.ValidationError(mark_safe(msg))
+#         return email
 
 
-class UserAdminCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+# class UserAdminCreationForm(forms.ModelForm):
+#     """A form for creating new users. Includes all the required
+#     fields, plus a repeated password."""
+#     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+#     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
-    class Meta:
-        model = User
-        fields = ('full_name', 'email',) #'full_name',)
+#     class Meta:
+#         model = User
+#         fields = ('full_name', 'email',) #'full_name',)
 
-    def clean_password2(self):
-        # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords don't match")
-        return password2
+#     def clean_password2(self):
+#         # Check that the two password entries match
+#         password1 = self.cleaned_data.get("password1")
+#         password2 = self.cleaned_data.get("password2")
+#         if password1 and password2 and password1 != password2:
+#             raise forms.ValidationError("Passwords don't match")
+#         return password2
 
-    def save(self, commit=True):
-        # Save the provided password in hashed format
-        user = super(UserAdminCreationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
+#     def save(self, commit=True):
+#         # Save the provided password in hashed format
+#         user = super(UserAdminCreationForm, self).save(commit=False)
+#         user.set_password(self.cleaned_data["password1"])
+#         if commit:
+#             user.save()
+#         return user
 
 
 
@@ -60,45 +63,45 @@ class UserDetailChangeForm(forms.ModelForm):
 
 
 
-class UserAdminChangeForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
-    """
-    password = ReadOnlyPasswordHashField()
+# class UserAdminChangeForm(forms.ModelForm):
+#     """A form for updating users. Includes all the fields on
+#     the user, but replaces the password field with admin's
+#     password hash display field.
+#     """
+#     password = ReadOnlyPasswordHashField()
 
-    class Meta:
-        model = User
-        fields = ('full_name', 'email', 'password', 'is_active', 'admin')
+#     class Meta:
+#         model = User
+#         fields = ('full_name', 'email', 'password', 'is_active', 'admin')
 
-    def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
-        return self.initial["password"]
+#     def clean_password(self):
+#         # Regardless of what the user provides, return the initial value.
+#         # This is done here, rather than on the field, because the
+#         # field does not have access to the initial value
+#         return self.initial["password"]
 
 
 
-class GuestForm(forms.ModelForm):
-    #email    = forms.EmailField()
-    class Meta:
-        model = GuestEmail
-        fields = [
-            'email'
-        ]
+# class GuestForm(forms.ModelForm):
+#     #email    = forms.EmailField()
+#     class Meta:
+#         model = GuestEmail
+#         fields = [
+#             'email'
+#         ]
 
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        super(GuestForm, self).__init__(*args, **kwargs)
+#     def __init__(self, request, *args, **kwargs):
+#         self.request = request
+#         super(GuestForm, self).__init__(*args, **kwargs)
 
-    def save(self, commit=True):
-        # Save the provided password in hashed format
-        obj = super(GuestForm, self).save(commit=False)
-        if commit:
-            obj.save()
-            request = self.request
-            request.session['guest_email_id'] = obj.id
-        return obj
+#     def save(self, commit=True):
+#         # Save the provided password in hashed format
+#         obj = super(GuestForm, self).save(commit=False)
+#         if commit:
+#             obj.save()
+#             request = self.request
+#             request.session['guest_email_id'] = obj.id
+#         return obj
 
 
 
@@ -116,26 +119,26 @@ class LoginForm(forms.Form):
         email  = data.get("email")
         password  = data.get("password")
         qs = User.objects.filter(email=email)
-        if qs.exists():
-            # user email is registered, check active/
-            not_active = False
-            if not_active:
-                ## not active, check email activation
-                link = reverse("account:resend-activation")
-                reconfirm_msg = """Go to <a href='{resend_link}'>
-                resend confirmation email</a>.
-                """.format(resend_link = link)
-                confirm_email = EmailActivation.objects.filter(email=email)
-                is_confirmable = confirm_email.confirmable().exists()
-                if is_confirmable:
-                    msg1 = "Please check your email to confirm your account or " + reconfirm_msg.lower()
-                    raise forms.ValidationError(mark_safe(msg1))
-                email_confirm_exists = EmailActivation.objects.email_exists(email).exists()
-                if email_confirm_exists:
-                    msg2 = "Email not confirmed. " + reconfirm_msg
-                    raise forms.ValidationError(mark_safe(msg2))
-                if not is_confirmable and not email_confirm_exists:
-                    raise forms.ValidationError("This user is inactive.")
+        # if qs.exists():
+        #     # user email is registered, check active/
+        #     not_active = False
+        #     if not_active:
+        #         ## not active, check email activation
+        #         link = reverse("account:resend-activation")
+        #         reconfirm_msg = """Go to <a href='{resend_link}'>
+        #         resend confirmation email</a>.
+        #         """.format(resend_link = link)
+        #         confirm_email = EmailActivation.objects.filter(email=email)
+        #         is_confirmable = confirm_email.confirmable().exists()
+        #         if is_confirmable:
+        #             msg1 = "Please check your email to confirm your account or " + reconfirm_msg.lower()
+        #             raise forms.ValidationError(mark_safe(msg1))
+        #         email_confirm_exists = EmailActivation.objects.email_exists(email).exists()
+        #         if email_confirm_exists:
+        #             msg2 = "Email not confirmed. " + reconfirm_msg
+        #             raise forms.ValidationError(mark_safe(msg2))
+        #         if not is_confirmable and not email_confirm_exists:
+        #             raise forms.ValidationError("This user is inactive.")
         user = authenticate(request, username=email, password=password)
         if user is None:
             raise forms.ValidationError("Invalid credentials")
@@ -178,7 +181,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('full_name', 'email',) #'full_name',)
+        fields = ('username', 'email',) #'full_name',)
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -195,6 +198,9 @@ class RegisterForm(forms.ModelForm):
         user.is_active = False # send confirmation email via signals
         # obj = EmailActivation.objects.create(user=user)
         # obj.send_activation_email()
+        g = Group.objects.get(name="Departments") 
+        g.user_set.add(User)
+
         if commit:
             user.save()
         return user

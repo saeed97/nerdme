@@ -1,6 +1,7 @@
 {% url 'home' as home_url %}
 {% url 'contact' as contact_url %}
-
+{% url 'groups:lists' as groups_url %}
+{% url 'groups:mine' as mygroups_url %}
 {% url 'login' as login_url %}
 {% url 'logout' as logout_url %}
 {% url 'register' as register_url %}
@@ -21,8 +22,11 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {% if request.path == home_url %}active{% endif %}">
-      <a class="nav-link" href="{{ home_url }}">Groups <span class="sr-only">(current)</span></a>
+      <li class="nav-item {% if request.path == groups_url %}active{% endif %}">
+      <a class="nav-link" href="{{ groups_url }}">Groups <span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item {% if request.path == mygroups_url %}active{% endif %}">
+      <a class="nav-link" href="{{ mygroups_url }}">MY Groups <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item {% if request.path == contact_url %}active{% endif %}">
         <a class="nav-link" href="{{ contact_url }}">Contact<span class="sr-only">(current)</span></a>

@@ -6,8 +6,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
-from groups.models import  groupList
-from groups.models import StudentsGroups as group
+from groups.models import Task, TaskList
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ class CSVImporter:
         with no path!
 
         Header row is:
-        Title, Group, group List, Created Date, Due Date, Completed, Created By, Assigned To, Note, Priority
+        Title, Group, Task List, Created Date, Due Date, Completed, Created By, Assigned To, Note, Priority
         """
 
         if as_string_obj:
@@ -45,7 +44,7 @@ class CSVImporter:
         expected = [
             "Title",
             "Group",
-            "group List",
+            "Task List",
             "Created By",
             "Created Date",
             "Due Date",
@@ -76,9 +75,9 @@ class CSVImporter:
                 due_date = newrow.get("Due Date") if newrow.get("Due Date") else None
                 priority = newrow.get("Priority") if newrow.get("Priority") else None
 
-                obj, created = group.objects.update_or_create(
+                obj, created = Task.objects.update_or_create(
                     created_by=newrow.get("Created By"),
-                    group_list=newrow.get("group List"),
+                    task_list=newrow.get("Task List"),
                     title=newrow.get("Title"),
                     defaults={
                         "assigned_to": assignee,
@@ -91,8 +90,8 @@ class CSVImporter:
                 )
                 self.upsert_count += 1
                 msg = (
-                    f'Upserted group {obj.id}: "{obj.title}"'
-                    f' in list "{obj.group_list}" (group "{obj.group_list.group}")'
+                    f'Upserted task {obj.id}: "{obj.title}"'
+                    f' in list "{obj.task_list}" (group "{obj.task_list.group}")'
                 )
                 self.upserts.append(msg)
 
@@ -111,14 +110,14 @@ class CSVImporter:
         row_errors = []
 
         # #######################
-        # group creator must exist
+        # Task creator must exist
         if not row.get("Created By"):
-            msg = f"Missing required group creator."
+            msg = f"Missing required task creator."
             row_errors.append(msg)
 
         creator = get_user_model().objects.filter(username=row.get("Created By")).first()
         if not creator:
-            msg = f"Invalid group creator {row.get('Created By')}"
+            msg = f"Invalid task creator {row.get('Created By')}"
             row_errors.append(msg)
 
         # #######################
@@ -129,7 +128,7 @@ class CSVImporter:
             if assigned.exists():
                 assignee = assigned.first()
             else:
-                msg = f"Missing or invalid group assignee {row.get('Assigned To')}"
+                msg = f"Missing or invalid task assignee {row.get('Assigned To')}"
                 row_errors.append(msg)
 
         # #######################
@@ -142,7 +141,7 @@ class CSVImporter:
             target_group = None
 
         # #######################
-        # group creator must be in the target group
+        # Task creator must be in the target group
         if creator and target_group not in creator.groups.all():
             msg = f"{creator} is not in group {target_group}"
             row_errors.append(msg)
@@ -154,12 +153,12 @@ class CSVImporter:
             row_errors.append(msg)
 
         # #######################
-        # group list must exist in the target group
+        # Task list must exist in the target group
         try:
-            grouplist = groupList.objects.get(name=row.get("group List"), group=target_group)
-            row["group List"] = grouplist
-        except groupList.DoesNotExist:
-            msg = f"group list {row.get('group List')} in group {target_group} does not exist"
+            tasklist = TaskList.objects.get(name=row.get("Task List"), group=target_group)
+            row["Task List"] = tasklist
+        except TaskList.DoesNotExist:
+            msg = f"Task list {row.get('Task List')} in group {target_group} does not exist"
             row_errors.append(msg)
 
         # #######################

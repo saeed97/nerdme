@@ -1,6 +1,6 @@
 {% extends "groups/base.html" %}
 
-{% block title %}group:{{ group.title }}{% endblock %}
+{% block title %}Task:{{ task.title }}{% endblock %}
 
 {% block extrahead %}
 <style>
@@ -22,9 +22,9 @@
   <div class="card-deck">
     <div class="card col-sm-8">
       <div class="card-body">
-        <h3 class="card-title">{{ group.title }}</h3>
-        {% if group.note %}
-        <div class="card-text">{{ group.note|safe|urlize|linebreaks }}</div>
+        <h3 class="card-title">{{ task.title }}</h3>
+        {% if task.note %}
+        <div class="card-text">{{ task.note|safe|urlize|linebreaks }}</div>
         {% endif %}
       </div>
     </div>
@@ -34,23 +34,23 @@
         <li class="list-group-item">
           <button
             class="btn btn-sm btn-primary"
-            id="EditgroupButton"
+            id="EditTaskButton"
             type="button"
             data-toggle="collapse"
-            data-target="#groupEdit">
-            Edit group
+            data-target="#TaskEdit">
+            Edit Task
           </button>
 
-          <form method="post" action="{% url "groups:group_toggle_done" group.id %}" role="form" class="d-inline">
+          <form method="post" action="{% url "groups:task_toggle_done" task.id %}" role="form" class="d-inline">
             {% csrf_token %}
             <div style="display:inline;">
               <button class="btn btn-info btn-sm" type="submit" name="toggle_done">
-                {% if group.completed %} Mark Not Done {% else %} Mark Done {% endif %}
+                {% if task.completed %} Mark Not Done {% else %} Mark Done {% endif %}
               </button>
             </div>
           </form>
 
-          <form method="post" action="{% url "groups:delete_group" group.id %}" role="form" class="d-inline">
+          <form method="post" action="{% url "groups:delete_task" task.id %}" role="form" class="d-inline">
             {% csrf_token %}
             <div style="display:inline;">
               <button class="btn btn-danger btn-sm" type="submit" name="submit_delete">
@@ -61,45 +61,45 @@
         </li>
         <li class="list-group-item">
           <strong>Assigned to:</strong>
-          {% if group.assigned_to %} {{ group.assigned_to.get_full_name }} {% else %} Anyone {% endif %}
+          {% if task.assigned_to %} {{ task.assigned_to.get_full_name }} {% else %} Anyone {% endif %}
         </li>
         <li class="list-group-item">
-          <strong>Reported by:</strong> {{ group.created_by.get_full_name }}
+          <strong>Reported by:</strong> {{ task.created_by.get_full_name }}
         </li>
         <li class="list-group-item">
-          <strong>Due date:</strong> {{ group.due_date }}
+          <strong>Due date:</strong> {{ task.due_date }}
         </li>
 
-        {% if group.completed %}
+        {% if task.completed %}
           <li class="list-group-item">
-            <strong>Completed on:</strong> {{ group.completed_date}}
+            <strong>Completed on:</strong> {{ task.completed_date}}
           </li>
         {% else %}
           <li class="list-group-item">
-            <strong>Completed:</strong> {{ group.completed|yesno:"Yes,No" }}
+            <strong>Completed:</strong> {{ task.completed|yesno:"Yes,No" }}
           </li>
         {% endif %}
 
         <li class="list-group-item">
           <strong>In list:</strong>
-          <a href="{% url 'groups:list_detail' group.group_list.id group.group_list.slug %}">
-            {{ group.group_list }}
+          <a href="{% url 'groups:list_detail' task.task_list.id task.task_list.slug %}">
+            {{ task.task_list }}
           </a>
         </li>
       </ul>
     </div>
   </div>
 
-  <div id="groupEdit" class="collapse">
-    {# group edit / new group form #}
-    {% include 'groups/include/group_edit.html' %}
+  <div id="TaskEdit" class="collapse">
+    {# Task edit / new task form #}
+    {% include 'groups/include/task_edit.html' %}
     {% if merge_form is not None %}
     <form action="" method="post">
       <div class="card border-danger">
-      <div class="card-header">Merge group</div>
+      <div class="card-header">Merge task</div>
       <div class="card-body">
         <div class="">
-          <p>Merging is a destructive operation. This group will not exist anymore, and members will be moved to the target group.</p>
+          <p>Merging is a destructive operation. This task will not exist anymore, and comments will be moved to the target task.</p>
         {% csrf_token %}
         {% for field in merge_form.visible_fields %}
         <p>
@@ -107,7 +107,7 @@
           {{ field }}
         </p>
         {% endfor %}
-        <input class="d-inline btn btn-sm btn-outline-danger" type="submit" name="merge_group_into" value="Merge">
+        <input class="d-inline btn btn-sm btn-outline-danger" type="submit" name="merge_task_into" value="Merge">
       </div>
       </div>
       </div>
@@ -122,7 +122,7 @@
     </h5>
 
     <div class="card-body pb-0">
-      {% if group.attachment_set.count %}
+      {% if task.attachment_set.count %}
         <div class="table-responsive">
           <table class="table mb-3">
             <thead>
@@ -135,7 +135,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for attachment in group.attachment_set.all %}
+              {% for attachment in task.attachment_set.all %}
                 <tr>
                   <td><a href="{{ attachment.file.url }}">{{ attachment.filename }}</a></td>
                   <td>{{ attachment.timestamp }}</td>
@@ -182,9 +182,9 @@
     </form>
   </div>
 
-  <div class="group_members mt-4">
+  <div class="task_comments mt-4">
     {% if comment_list %}
-      <h5>members on this group</h5>
+      <h5>Comments on this task</h5>
       {% for comment in comment_list %}
       <div class="mb-3 card">
         <div class="card-header">
@@ -204,7 +204,7 @@
       </div>
       {% endfor %}
     {% else %}
-        <h5>No members (yet).</h5>
+        <h5>No comments (yet).</h5>
     {% endif %}
   </div>
 {% endblock %}

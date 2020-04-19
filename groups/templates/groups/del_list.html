@@ -3,15 +3,15 @@
 
 {% block content %}
   {% if user.is_staff %}
-  <h1>Delete entire list: {{ group_list.name }} ?</h1>
+  <h1>Delete entire list: {{ task_list.name }} ?</h1>
 
   <p>Category tally:</p>
 
   <ul>
-    <li>Incomplete: {{ group_count_undone }} </li>
-    <li>Complete: {{ group_count_done }} </li>
+    <li>Incomplete: {{ task_count_undone }} </li>
+    <li>Complete: {{ task_count_done }} </li>
     <li>
-      <strong>Total: {{ group_count_total }}</strong>
+      <strong>Total: {{ task_count_total }}</strong>
     </li>
   </ul>
 
@@ -20,9 +20,9 @@
 
   <form action="" method="post" accept-charset="utf-8">
     {% csrf_token %}
-    <input type="hidden" name="group_list" value="{{ group_list.id }}">
+    <input type="hidden" name="task_list" value="{{ task_list.id }}">
     <p>
-      <a href="{% url 'groups:list_detail' group_list.id group_list.slug %}" class="btn btn-success">Return to list: {{ group_list.name }}</a>
+      <a href="{% url 'groups:list_detail' task_list.id task_list.slug %}" class="btn btn-success">Return to list: {{ task_list.name }}</a>
       <input type="submit" name="delete-confirm" value="Do it! &rarr;" class="btn btn-danger">
     </p>
   </form>

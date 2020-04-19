@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <h2>{{ group }}</h2>
+  <h2>{{ task }}</h2>
 
   <form action="" method="POST">
     {% csrf_token %}
@@ -24,7 +24,7 @@
       {% endfor %}
     {% endif %}
 
-    <form action="" name="add_group" method="post">
+    <form action="" name="add_task" method="post">
         {% csrf_token %}
         <div class="form-group">
           <label for="id_title" name="title">Subject</label>
@@ -41,7 +41,7 @@
         </div>
 
         <input type="hidden" id="id_priority" name="priority" value="50">
-        <p><input type="submit" class="btn btn-primary" name="add_group" value="Submit"></p>
+        <p><input type="submit" class="btn btn-primary" name="add_task" value="Submit"></p>
     </form>
 
 {% endblock %}

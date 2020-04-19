@@ -63,7 +63,7 @@ INSTALLED_APPS = [
 ]
 SITE_ID = 1
 
-AUTH_USER_MODEL = 'accounts.User' #changes the built-in user model to ours
+# AUTH_USER_MODEL = 'accounts.User' #changes the built-in user model to ours
 LOGIN_URL = '/login/'
 LOGIN_URL_REDIRECT = '/'
 LOGOUT_URL = '/logout/'

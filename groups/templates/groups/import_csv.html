@@ -9,7 +9,7 @@
   </h2>
 
   <p>
-    Batch-import Groups by uploading a specifically-formatted CSV.
+    Batch-import tasks by uploading a specifically-formatted CSV.
     See documentation for formatting rules.
     Successs and failures will be reported here.
   </p>
@@ -34,7 +34,7 @@
 
         {% if results.upserts %}
           <p>
-            <b>Upserts (Groups created or updated):</b>
+            <b>Upserts (tasks created or updated):</b>
           </p>
           <ul>
             {% for line in results.upserts %}
@@ -45,7 +45,7 @@
 
         {% if results.errors %}
           <p>
-            <b>Errors (Groups NOT created or updated):</b>
+            <b>Errors (tasks NOT created or updated):</b>
           </p>
           <ul>
             {% for error_row in results.errors %}
@@ -68,7 +68,7 @@
 
   <div class="card">
     <div class="card-header">
-      Upload Groups
+      Upload Tasks
     </div>
     <div class="card-body">
       <form method="post" enctype="multipart/form-data">

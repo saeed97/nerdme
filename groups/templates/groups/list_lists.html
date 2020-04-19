@@ -5,16 +5,16 @@
 {% block content %}
   <h1>groups Lists</h1>
 
-  <p>{{ group_count }} Groups in {{ list_count }} list{{ list_count|pluralize }}</p>
+  <p>{{ task_count }} tasks in {{ list_count }} list{{ list_count|pluralize }}</p>
 
   {% regroup lists by group as section_list %}
   {% for group in section_list %}
     <h3>Group: {{ group.grouper }}</h3>
     <ul class="list-group mb-4">
-      {% for group in group.list %}
+      {% for task in group.list %}
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <a href="{% url 'groups:list_detail' group.id group.slug %}">{{ group.name }}</a>
-        <span class="badge badge-primary badge-pill">{{ group.group_set.count }}</span>
+        <a href="{% url 'groups:list_detail' task.id task.slug %}">{{ task.name }}</a>
+        <span class="badge badge-primary badge-pill">{{ task.task_set.count }}</span>
       </li>
       {% endfor %}
     </ul>

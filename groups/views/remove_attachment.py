@@ -18,11 +18,11 @@ def remove_attachment(request, attachment_id: int) -> HttpResponse:
     if request.method == "POST":
         attachment = get_object_or_404(Attachment, pk=attachment_id)
 
-        redir_url = reverse("groups:group_detail", kwargs={"group_id": attachment.group.id})
+        redir_url = reverse("groups:task_detail", kwargs={"task_id": attachment.task.id})
 
         # Permissions
         if not (
-            attachment.group.group_list.group in request.user.groups.all()
+            attachment.task.task_list.group in request.user.groups.all()
             or request.user.is_superuser
         ):
             raise PermissionDenied

@@ -2,16 +2,15 @@ from django.conf import settings
 from django.urls import path
 
 from groups import views
-from groups.features import HAS_group_MERGE
+from groups.features import HAS_TASK_MERGE
 
 app_name = "groups"
 
-
 urlpatterns = [
     path("", views.list_lists, name="lists"),
-    # View reorder_Groups is only called by JQuery for drag/drop group ordering.
-    path("reorder_Groups/", views.reorder_Groups, name="reorder_Groups"),
-    # Allow users to post Groups from outside django-groups (e.g. for filing tickets - see docs)
+    # View reorder_tasks is only called by JQuery for drag/drop task ordering.
+    path("reorder_tasks/", views.reorder_tasks, name="reorder_tasks"),
+    # Allow users to post tasks from outside django-groups (e.g. for filing tickets - see docs)
     path("ticket/add/", views.external_add, name="external_add"),
     # Three paths into `list_detail` view
     path("mine/", views.list_detail, {"list_slug": "mine"}, name="mine"),
@@ -24,26 +23,26 @@ urlpatterns = [
     path("<int:list_id>/<str:list_slug>/", views.list_detail, name="list_detail"),
     path("<int:list_id>/<str:list_slug>/delete/", views.del_list, name="del_list"),
     path("add_list/", views.add_list, name="add_list"),
-    path("group/<int:group_id>/", views.group_detail, name="group_detail"),
+    path("task/<int:task_id>/", views.task_detail, name="task_detail"),
     path(
         "attachment/remove/<int:attachment_id>/", views.remove_attachment, name="remove_attachment"
     ),
 ]
 
-if HAS_group_MERGE:
+if HAS_TASK_MERGE:
     # ensure mail tracker autocomplete is optional
-    from groups.views.group_autocomplete import groupAutocomplete
+    from groups.views.task_autocomplete import TaskAutocomplete
 
     urlpatterns.append(
         path(
-            "group/<int:group_id>/autocomplete/", groupAutocomplete.as_view(), name="group_autocomplete"
+            "task/<int:task_id>/autocomplete/", TaskAutocomplete.as_view(), name="task_autocomplete"
         )
     )
 
 urlpatterns.extend(
     [
-        path("toggle_done/<int:group_id>/", views.toggle_done, name="group_toggle_done"),
-        path("delete/<int:group_id>/", views.delete_group, name="delete_group"),
+        path("toggle_done/<int:task_id>/", views.toggle_done, name="task_toggle_done"),
+        path("delete/<int:task_id>/", views.delete_task, name="delete_task"),
         path("search/", views.search, name="search"),
         path("import_csv/", views.import_csv, name="import_csv"),
     ]
