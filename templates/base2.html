@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Base Template</title>
+        {% include 'base/css.html' %}
+        <!-- Font Icon -->
+      <link rel="stylesheet" href="{% static 'login_register/fonts/material-icon/css/material-design-iconic-font.min.css' %}" />
+
+      <!-- Main css -->
+      <link rel="stylesheet" href="{% static 'login_register/css/style.css' %}" />
+      <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
+
+      
+
+
+        {% block base_head %}{% endblock %}
+    </head>
+    <body>
+    		<!-- Nav -->
+
+
+	
+      {% include 'base/navbar2.html' with brand_name='nerdMe' %}
+      <div class='container'>
+        {% if messages %}
+      <div class="alert alert-success messages">
+          {% for message in messages %}
+          <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+              {{ message }}<br/>
+          </span>
+          {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+
+        {% include 'base/js.html' %}
+        
+        <script type="static text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.scrolly.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.scrollex.min.js' %}"></script>
+        <script src="{% static 'assets/js/skel.min.js' %}"></script>
+        <script src="{% static 'assets/js/util.js' %}"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+          <script src="{% static 'login_register/vendor/jquery/jquery.min.js' %}"></script>
+          <script src="{% static 'login_register/js/main_register.js' %}"></script>
+
+        {% block javascript %}
+
+        {% endblock %}
+    </body>
+  </html>
+  

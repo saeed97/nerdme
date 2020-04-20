@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 
+{% load static %}
 {% block content %}
+<body data-spy="scroll" data-target=".navbar-collapse">
+
+<!-- preloader section -->
+<div class="preloader">
+	<div class="sk-spinner sk-spinner-wordpress">
+       <span class="sk-inner-circle"></span>
+     </div>
+</div>
+
+{% comment %} {% block content %}
 <div class='row'>
 <div class='col-12'>
 <h6>Email: {{user.email}}</h6>
@@ -10,6 +21,126 @@
 <h6>Graduation Date: {{user.GraduationDate}}</h6>
 {% if user.image %}
  <img src='{{ user.image.url }}' />
-{% endif %}
+{% endif %} {% endcomment %}
 
+
+<!-- header section -->
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+                {% if user.image %}
+				<img src="{{user.image}}" class="img-responsive img-circle tm-border" alt="templatemo easy profile"/>
+            {% endif %}
+
+				<hr>
+				<h1 class="tm-title bold shadow">{{ user.email }}</h1>
+			<!--	<h1 class="white bold shadow">My Classes Are: Classes Here</h1> -->
+			</div>
+		</div>
+	</div>
+</header>
+
+<!-- about and skills section -->
+<section class="container">
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+			<div class="about">
+				<h2 class="accent">Classes</h2>
+				<h3>Classes: Intro to Programming</h3>
+					<h3>Classes: Discrete Languages</h3>
+						<h3>Classes: DCSP</h3>
+
+			</div>
+		</div>
+                <div class="col-md-4 col-sm-12">
+			<div class="education">
+				<h2 class="white">About me</h2>
+					<div class="education-content">
+						<h3 class="education-title accent"><h6> {{user.aboutme}}</h6></h3>
+							<div class="education-school">
+
+							</div>
+
+					</div>
+			</div>
+
+</section>
+<!-- education and languages -->
+<section class="container">
+	<div class="row">
+		<div class="col-md-8 col-sm-12">
+			<div class="education">
+				<h2 class="white">Major</h2>
+					<div class="education-content">
+						<h3 class="education-title accent"><h6>Major: {{user.major}}</h6></h3>
+							<div class="education-school">
+
+							</div>
+
+					</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-sm-12">
+			<div class="languages">
+				<div align = "center">
+				<h2>Graduation Date</h2>
+			</div>
+					<ul>
+						<div align="center">
+	  <h3>{{user.GraduationDate}} </h3>
+	</div>
+					</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- contact and experience -->
+<section class="container">
+	<div class="row">
+		<div class="col-md-4 col-sm-12">
+			<div class="contact">
+				<h2>Contact</h2>
+					<p><i class="fa fa-map-marker"></i> {{user.location}}</p>
+					<p><i class="fa fa-phone"></i> 010-020-0890</p>
+					<p><i class="fa fa-envelope"></i> {{user.email}}</p>
+					<p><i class="fa fa-globe"></i> www.company.com</p>
+			</div>
+		</div>
+		<div class="col-md-8 col-sm-12">
+			<div class="experience">
+				<h2 class="white">Experiences</h2>
+					<div class="experience-content">
+						<h4 class="experience-title accent">{{user.experience}}</h4>
+
+					</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- footer section -->
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<p>Copyright &copy; 6969 NerdMe</p>
+				<ul class="social-icons">
+					<li><a href="#" class="fa fa-facebook"></a></li>
+                    <li><a href="#" class="fa fa-google-plus"></a></li>
+					<li><a href="#" class="fa fa-twitter"></a></li>
+					<li><a href="#" class="fa fa-dribbble"></a></li>
+					<li><a href="#" class="fa fa-github"></a></li>
+					<li><a href="#" class="fa fa-behance"></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</footer>
+</body>
 {% endblock %}
+
+
+
+

@@ -95,9 +95,9 @@ class AccountHomeView(LoginRequiredMixin, DetailView):
 
 class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
     form_class = LoginForm
-    success_url = '/'
+    success_url = '/profile/'
     template_name = 'accounts/login.html'
-    default_next = '/'
+    default_next = '/groups/'
 
     def form_valid(self, form):
         next_path = self.get_next_url()

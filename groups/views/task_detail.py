@@ -34,14 +34,14 @@ def handle_add_comment(request, task):
         member=request.user, task=task, body=bleach.clean(request.POST["comment-body"], strip=True)
     )
 
-    send_email_to_thread_participants(
-        task,
-        request.POST["comment-body"],
-        request.user,
-        subject='New comment posted on task "{}"'.format(task.title),
-    )
+    # send_email_to_thread_participants(
+    #     task,
+    #     request.POST["comment-body"],
+    #     request.user,
+    #     subject='New comment posted on task "{}"'.format(task.title),
+    # )
 
-    messages.success(request, "Comment posted. Notification email sent to thread participants.")
+    # messages.success(request, "Comment posted. Notification email sent to thread participants.")
 
 
 @login_required

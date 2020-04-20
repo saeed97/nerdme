@@ -198,11 +198,13 @@ class RegisterForm(forms.ModelForm):
         user.is_active = False # send confirmation email via signals
         # obj = EmailActivation.objects.create(user=user)
         # obj.send_activation_email()
-        g = Group.objects.get(name="Departments") 
-        g.user_set.add(User)
+        group = Group.objects.get(name='Departments')
+        
+      
 
         if commit:
             user.save()
+            user.groups.add(group)
         return user
 
 

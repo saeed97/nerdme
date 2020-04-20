@@ -1,10 +1,76 @@
-{% extends "base.html" %}
-
+{% extends "base2.html" %}
+{% load static %}
 {% block content %}
-<h1>Login</h1>
-    <form method='POST'> {% csrf_token %}
-      {{ form }}
-      <button type='submit' class='btn btn-default'>Submit</button>
-    </form>
+  
+	<br><br>
+  {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+   
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        <h2 class="form-title">Sign up</h2>
+                        {% block body %}
+                        <form action= "{% url 'register' %}" method="POST" class="register-form" id="register-form">
+                            {% csrf_token %}
+
+
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <!--<input type="text" class='form-control' name="username" id="name" placeholder="Your Name"/> -->
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <!--<input type="email" name="email" id="email" placeholder="Your Email"/>-->
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                                <!--<input type="password" name="password" id="pass" placeholder="Password"/> -->
+                                {{ form.password1 }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                               <!-- <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"/>-->
+                                {{ form.password2 }}
+                            </div>
+
+                            <div class="form-group">
+                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signup" id="signup" class="btn btn-primary" value="Register"/>
+                            </div>
+                        </form>
+                        {% endblock %}
+                    </div>
+                    <div class="signup-image">
+                        <figure><img src="{% static 'login_register/images/signup-image.jpg' %}" alt="sing up image"></figure>
+                        <a href="{%url "login" %}" class="signup-image-link">I am already member</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    
+
 
 {% endblock %}

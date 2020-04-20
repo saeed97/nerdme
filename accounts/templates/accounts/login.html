@@ -1,53 +1,71 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
+{% load static%}
 {% block content %}
-<br/><br/><br/><br/>
-    {% if form.errors %}
-    <div class="alert alert-dismissible alert-danger">
-        <h4 class="alert-heading">Error Authenticating</h4>
-      {% for field in form %}
+<br><br>
+  {% if form.errors %}
+    {% for field in form %}
         {% for error in field.errors %}
-             <p class="mb-0">{{error|escape}}</p>
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
         {% endfor %}
-      {% endfor %}
-        <p class="mb-0">{{form.errors}}</p>
-       
-    </div>
-    {% endif %}
-
-
-    <div class="container" align="center">
-       
-    <div style="text-align: left; padding-left: 3%; width: 400px;">
- 
-      <form action="" method="post"> 
-                    {% csrf_token %}
-                    {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-            {% endif %}
-
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title"align="center">Log in</h3>
-
-                </div>
-                <div class="panel-body"align="center">
-                    <div class="form-group has-primary">
-                        <div class="form-control">{{form.email}}</div><br/><br/>
-                  
-                        <div class="form-control">{{form.password}}</div><br/><br/>
-                        <button type="submit" class="btn btn-primary">Log in</button><br/><br/>
-                    </div>
-                    <br><br>
-                    <p>You do not have an account? Create one here</a></p>
-              
-                </div>
-            </div>
-                
-     </form> 
-            </div>
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
         </div>
-    </div>
+    {% endfor %}
+{% endif %}
+
+	 
+
+        <!-- Sign in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure><img src="{% static 'login_register/images/signin-image.jpg' %}" alt="sing up image"></figure>
+                        <a href="{%url "register" %}" class="signup-image-link">Create an account</a>
+                    </div>
+
+                    <div class="signin-form">
+                        <h2 class="form-title">Sign In</h2>
+                       
+                        <form action= "{% url 'login' %}" method="POST" class="register-form" id="login-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                                {{ form.password }}
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
+                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signin" id="signin" class="btn btn-primary"  value="Log in"/>
+                            </div>
+                        </form>
+                        
+                        <div class="social-login">
+                            <span class="social-label">Or login with</span>
+                            <ul class="socials">
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+        </section>  
+
+
 
 
 {% endblock %}
