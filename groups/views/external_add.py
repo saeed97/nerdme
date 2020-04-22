@@ -15,7 +15,7 @@ from groups.utils import staff_check
 
 
 @login_required
-@user_passes_test(staff_check)
+# @user_passes_test(staff_check)
 def external_add(request) -> HttpResponse:
     """Allow authenticated users who don't have access to the rest of the ticket system to file a ticket
     in the list specified in settings (e.g. django-groups can be used a ticket filing system for a school, where

@@ -1,0 +1,17 @@
+{% url 'home' as home_url %}
+{% url 'contact' as contact_url %}
+{% url 'groups:lists' as groups_url %}
+{% url 'groups:mine' as mygroups_url %}
+{% url 'login' as login_url %}
+{% url 'logout' as logout_url %}
+{% url 'register' as register_url %}
+{% url 'Profile:home' as profile_url%}
+{% url 'account:home' as account_url %}
+
+<div class="w3-bar w3-light-grey w3-border w3-xxlarge">
+  <a href="{{home_url}}" class="w3-bar-item w3-button w3-green"><i class="fa fa-home"></i></a>
+  <a href="{{contact_url}}" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+  <a href="#" class="w3-bar-item w3-button"><i class="fa fa-globe"></i></a>
+  <a href="{{login_url}}" class="w3-bar-item w3-button"><i class="fa fa-sign-in"></i></a>
+</div>
+

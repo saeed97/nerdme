@@ -11,7 +11,7 @@ from groups.utils import staff_check
 
 
 @login_required
-@user_passes_test(staff_check)
+# @user_passes_test(staff_check)
 def toggle_done(request, task_id: int) -> HttpResponse:
     """Toggle the completed status of a task from done to undone, or vice versa.
     Redirect to the list from which the task came.

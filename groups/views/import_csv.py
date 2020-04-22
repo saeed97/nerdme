@@ -8,7 +8,7 @@ from groups.utils import staff_check
 
 
 @login_required
-@user_passes_test(staff_check)
+# @user_passes_test(staff_check)
 def import_csv(request) -> HttpResponse:
     """Import a specifically formatted CSV into stored tasks.
     """

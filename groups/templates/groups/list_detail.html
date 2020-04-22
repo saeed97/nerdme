@@ -7,7 +7,7 @@
 
   {% if list_slug != "mine" %}
     <button class="btn btn-primary" id="AddTaskButton" type="button"
-      data-toggle="collapse" data-target="#AddEditTask">Add Task</button>
+      data-toggle="collapse" data-target="#AddEditTask">Add Group</button>
 
     {# Task edit / new task form #}
     <div id="AddEditTask" class="collapse">
@@ -18,7 +18,7 @@
 
   {% if tasks %}
     {% if list_slug == "mine" %}
-      <h1>Tasks assigned to me (in all groups)</h1>
+      <h1>Groups I am in (in all groups)</h1>
     {% else %}
       <h1>{{ view_completed|yesno:"Completed tasks, Tasks" }} in "{{ task_list.name }}"</h1>
       <p><small><i>In workgroup "{{ task_list.group }}" - drag rows to set priorities.</i></small></p>
@@ -72,7 +72,7 @@
       {% include 'groups/include/toggle_delete.html' %}
 
   {% else %}
-    <h4>No tasks on this list yet (add one!)</h4>
+    <h4>No groups on this list yet (add one!)</h4>
     {% include 'groups/include/toggle_delete.html' %}
 
   {% endif %}

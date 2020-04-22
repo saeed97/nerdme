@@ -106,7 +106,7 @@ class UserDetailChangeForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    email    = forms.EmailField(label='Email')
+    username    = forms.CharField(label='username')
     password = forms.CharField(widget=forms.PasswordInput)
 
     def __init__(self, request, *args, **kwargs):
@@ -116,9 +116,9 @@ class LoginForm(forms.Form):
     def clean(self):
         request = self.request
         data = self.cleaned_data
-        email  = data.get("email")
+        username  = data.get("username")
         password  = data.get("password")
-        qs = User.objects.filter(email=email)
+        qs = User.objects.filter(username=username)
         # if qs.exists():
         #     # user email is registered, check active/
         #     not_active = False
@@ -139,11 +139,14 @@ class LoginForm(forms.Form):
         #             raise forms.ValidationError(mark_safe(msg2))
         #         if not is_confirmable and not email_confirm_exists:
         #             raise forms.ValidationError("This user is inactive.")
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is None:
             raise forms.ValidationError("Invalid credentials")
         login(request, user)
         self.user = user
+        group = Group.objects.get(name='Departments')
+        user.groups.add(group)
+
         return data
 
     # def form_valid(self, form):
@@ -195,11 +198,12 @@ class RegisterForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(RegisterForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        user.is_active = False # send confirmation email via signals
+        user.is_active = True # send confirmation email via signals
         # obj = EmailActivation.objects.create(user=user)
         # obj.send_activation_email()
-        g = Group.objects.get(name="Departments") 
-        g.user_set.add(User)
+        group = Group.objects.get(name='Departments')
+        
+      
 
         if commit:
             user.save()

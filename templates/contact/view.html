@@ -1,5 +1,12 @@
-{% extends "base.html" %}
 
+
+
+{% if user.is_authenticated %}
+      		{% include  "base.html" %}
+
+{% else %}
+            {% include  "base2.html" %}
+ {% endif %}
 
 {% comment %} {% block content %}
 <div class='text-center'>

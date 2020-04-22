@@ -23,7 +23,7 @@ def profile(request):
         if (request.user.email):
             username = request.user.email
     for user in queryset:
-        if username== user.email:
+        if username == user.email:
             info = user
 
     # queryset = Profile.objects.all()

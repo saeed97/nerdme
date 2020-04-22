@@ -12,7 +12,7 @@ from groups.utils import send_notify_mail, staff_check
 
 
 @login_required
-@user_passes_test(staff_check)
+# @user_passes_test(staff_check)
 def list_detail(request, list_id=None, list_slug=None, view_completed=False) -> HttpResponse:
     """Display and manage tasks in a groups list.
     """
