@@ -19,13 +19,13 @@
     </div>
 
     <div class="form-group">
-      <label for="id_due_date">Due Date</label>
+      <label for="id_due_date">Starting Date</label>
       <input type="date" class="form-control" id="id_due_date" name="due_date"
         value="{% if form.due_date.value %}{{ form.due_date.value|date:"Y-m-d" }}{% endif %}">
     </div>
 
     <div class="form-group">
-      <label for="id_assigned_to">Assigned To</label>
+      <label for="id_assigned_to">Group Members</label>
       {# See groups.forms.AddEditTaskForm #}
       {{form.assigned_to}}
     </div>
