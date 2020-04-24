@@ -40,7 +40,7 @@
             data-target="#TaskEdit">
             Edit Group
           </button>
-
+        {% if task.created_by == request.user %}
           <form method="post" action="{% url "groups:task_toggle_done" task.id %}" role="form" class="d-inline">
             {% csrf_token %}
             <div style="display:inline;">
@@ -58,6 +58,7 @@
               </button>
             </div>
           </form>
+            {% endif %}
         </li>
         <li class="list-group-item">
           <strong>Group Members:</strong>
@@ -114,7 +115,7 @@
     </form>
     {% endif %}
   </div>
-
+<!--
 {% if attachments_enabled %}
   <div class="card mt-4">
     <h5 class="card-header">
@@ -170,6 +171,7 @@
     </div>
   </div>
 {% endif %}
+-->
 
   <div class="mt-3">
     <h5>Put your name down to be included in this Group:</h5>
