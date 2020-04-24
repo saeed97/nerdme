@@ -1,6 +1,6 @@
 {% extends "groups/base.html" %}
 
-{% block title %}Task:{{ task.title }}{% endblock %}
+{% block title %}Group:{{ task.title }}{% endblock %}
 
 {% block extrahead %}
 <style>
@@ -60,11 +60,11 @@
           </form>
         </li>
         <li class="list-group-item">
-          <strong>Admin:</strong>
+          <strong>Group Members:</strong>
           {% if task.assigned_to %} {{ task.assigned_to.get_full_name }} {% else %} Anyone {% endif %}
         </li>
         <li class="list-group-item">
-          <strong>Reported by:</strong> {{ task.created_by.get_full_name }}
+          <strong>Admin:</strong> {{ task.created_by.get_full_name }}
         </li>
         <li class="list-group-item">
           <strong>Starting date:</strong> {{ task.due_date }}
@@ -184,7 +184,7 @@
 
   <div class="task_comments mt-4">
     {% if comment_list %}
-      <h5>Memebers on this Group</h5>
+      <h5>Members on this Group</h5>
       {% for comment in comment_list %}
       <div class="mb-3 card">
         <div class="card-header">
