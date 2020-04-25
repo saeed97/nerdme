@@ -20,11 +20,11 @@ def list_lists(request) -> HttpResponse:
     searchform = SearchForm(auto_id=False)
 
     # Make sure user belongs to at least one group.
-    if not request.user.groups.all().exists():
-        messages.warning(
-            request,
-            "You do not yet belong to any groups. Ask your administrator to add you to one.",
-        )
+    # if not request.user.groups.all().exists():
+    #     messages.warning(
+    #         request,
+    #         "You do not yet belong to any groups. Ask your administrator to add you to one.",
+    #     )
 
     # Superusers see all lists
     lists = TaskList.objects.all().order_by("group__name", "name")

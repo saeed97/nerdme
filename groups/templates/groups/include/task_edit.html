@@ -1,11 +1,13 @@
+
+  
 {# Form used by both Add Task and Edit Task views #}
 
 <form action="" name="add_task" method="post">
   {% csrf_token %}
   <div class="mt-3">
     <div class="form-group">
-      <label for="id_title" name="title">Task</label>
-      <input type="text" class="form-control" id="id_title" name="title" required placeholder="Task title"
+      <label for="id_title" name="title">Group</label>
+      <input type="text" class="form-control" id="id_title" name="title" required placeholder="Group title"
         value="{% if form.title.value %}{{ form.title.value }}{% endif %}">
     </div>
 
@@ -53,3 +55,5 @@
 
   </div>
 </form>
+
+

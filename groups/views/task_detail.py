@@ -29,10 +29,25 @@ if HAS_TASK_MERGE:
 def handle_add_comment(request, task):
     if not request.POST.get("add_comment"):
         return
+    create= True
+    groups = Comment.objects.all()
+    count =0
+    for user in groups:
+        
+        if(user.task==task):
+            count +=1
+            if(user.member == request.user):
+                create = False
+    if(count >= 5):
+        return "Sorry The maximum is 5 members"
+    if(create == False):
+        return "You already in the group"
 
-    Comment.objects.create(
-        member=request.user, task=task, body=bleach.clean(request.POST["comment-body"], strip=True)
-    )
+    if (create):
+        Comment.objects.create(
+            member=request.user, task=task, body=bleach.clean(request.POST["comment-body"], strip=True)
+        )
+    
 
     # send_email_to_thread_participants(
     #     task,
@@ -74,6 +89,7 @@ def task_detail(request, task_id: int) -> HttpResponse:
         # Handle task merging
         if not request.POST.get("merge_task_into"):
             merge_form = MergeForm()
+            
         else:
             merge_form = MergeForm(request.POST)
             if merge_form.is_valid():
@@ -85,7 +101,7 @@ def task_detail(request, task_id: int) -> HttpResponse:
             return redirect(reverse("groups:task_detail", kwargs={"task_id": merge_target.pk}))
 
     # Save submitted comments
-    handle_add_comment(request, task)
+    error = handle_add_comment(request, task)
 
     # Save task edits
     if not request.POST.get("add_edit_task"):
@@ -146,6 +162,7 @@ def task_detail(request, task_id: int) -> HttpResponse:
         "thedate": thedate,
         "comment_classes": defaults("groups_COMMENT_CLASSES"),
         "attachments_enabled": defaults("groups_ALLOW_FILE_ATTACHMENTS"),
+        "error": error,
     }
 
     return render(request, "groups/task_detail.html", context)

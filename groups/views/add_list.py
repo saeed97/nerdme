@@ -11,7 +11,7 @@ from groups.utils import staff_check
 
 
 @login_required
-# @user_passes_test(staff_check)
+@user_passes_test(staff_check)
 def add_list(request) -> HttpResponse:
     """Allow users to add a new groups list to the group they're in.
     """

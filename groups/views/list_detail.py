@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from groups.forms import AddEditTaskForm
-from groups.models import Task, TaskList
+from groups.models import Task, TaskList, Comment
 from groups.utils import send_notify_mail, staff_check
 
 
@@ -23,10 +23,11 @@ def list_detail(request, list_id=None, list_slug=None, view_completed=False) -> 
 
     # Which tasks to show on this list view?
     if list_slug == "mine":
-        tasks = Task.objects.filter(assigned_to=request.user)
+        tasks = Task.objects.filter(created_by=request.user)
+        taskid= Comment.objects.filter(member=request.user).order_by("-date")
 
     else:
-        # Show a specific list, ensuring permissions.
+        # Show a specific list, ensuring permissions.zyy
         task_list = get_object_or_404(TaskList, id=list_id)
         if task_list.group not in request.user.groups.all() and not request.user.is_superuser:
             raise PermissionDenied
@@ -80,6 +81,8 @@ def list_detail(request, list_id=None, list_slug=None, view_completed=False) -> 
         "form": form,
         "tasks": tasks,
         "view_completed": view_completed,
+        # "taskid": taskid,
+        
     }
 
     return render(request, "groups/list_detail.html", context)
