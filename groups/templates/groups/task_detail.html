@@ -1,6 +1,6 @@
 {% extends "groups/base.html" %}
 
-{% block title %}Task:{{ task.title }}{% endblock %}
+{% block title %}Group:{{ task.title }}{% endblock %}
 
 {% block extrahead %}
 <style>
@@ -32,20 +32,21 @@
     <div class="card col-sm-4 p-0">
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
+         {% if task.created_by == request.user %}
           <button
             class="btn btn-sm btn-primary"
             id="EditTaskButton"
             type="button"
             data-toggle="collapse"
             data-target="#TaskEdit">
-            Edit Task
+            Edit Group
           </button>
-
+       
           <form method="post" action="{% url "groups:task_toggle_done" task.id %}" role="form" class="d-inline">
             {% csrf_token %}
             <div style="display:inline;">
               <button class="btn btn-info btn-sm" type="submit" name="toggle_done">
-                {% if task.completed %} Mark Not Done {% else %} Mark Done {% endif %}
+                {% if task.completed %} Mark Not Closed Group {% else %} Close Group {% endif %}
               </button>
             </div>
           </form>
@@ -58,16 +59,17 @@
               </button>
             </div>
           </form>
+            {% endif %}
         </li>
         <li class="list-group-item">
-          <strong>Assigned to:</strong>
-          {% if task.assigned_to %} {{ task.assigned_to.get_full_name }} {% else %} Anyone {% endif %}
+          <strong>Group Members:</strong>
+          {% if task.assigned_to %} {{ task.assigned_to.username }} {% else %} Anyone {% endif %}
         </li>
         <li class="list-group-item">
-          <strong>Reported by:</strong> {{ task.created_by.get_full_name }}
+          <strong>Admin:</strong> {{ task.created_by.username }}
         </li>
         <li class="list-group-item">
-          <strong>Due date:</strong> {{ task.due_date }}
+          <strong>Starting date:</strong> {{ task.due_date }}
         </li>
 
         {% if task.completed %}
@@ -115,7 +117,7 @@
     {% endif %}
   </div>
 
-{% if attachments_enabled %}
+{% comment %} {% if attachments_enabled %}
   <div class="card mt-4">
     <h5 class="card-header">
       Attachments
@@ -169,22 +171,33 @@
 
     </div>
   </div>
-{% endif %}
-
+{% endif %} {% endcomment %}
+  
   <div class="mt-3">
-    <h5>Add comment</h5>
+    <h5>Put your name down to be included in this Group:</h5>
     <form action="" method="post">
       {% csrf_token %}
       <div class="form-group">
         <textarea class="form-control" name="comment-body" rows="3" required></textarea>
       </div>
-      <input class="btn btn-sm btn-primary" type="submit" name="add_comment" value="Add Comment">
+      <input class="btn btn-sm btn-primary" type="submit" name="add_comment" value="Confirm">
     </form>
   </div>
+ 
+  {% if error %}
+    {% comment %} {% for field in error %} {% endcomment %}
+        
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+{% comment %}         
+    {% endfor %} {% endcomment %}
+    
+{% endif %}
 
   <div class="task_comments mt-4">
     {% if comment_list %}
-      <h5>Comments on this task</h5>
+      <h5>Memebers on this Group</h5>
       {% for comment in comment_list %}
       <div class="mb-3 card">
         <div class="card-header">
@@ -204,7 +217,7 @@
       </div>
       {% endfor %}
     {% else %}
-        <h5>No comments (yet).</h5>
+        <h5>No members (yet).</h5>
     {% endif %}
   </div>
 {% endblock %}

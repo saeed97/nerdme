@@ -7,7 +7,7 @@
 
   {% if list_slug != "mine" %}
     <button class="btn btn-primary" id="AddTaskButton" type="button"
-      data-toggle="collapse" data-target="#AddEditTask">Add Task</button>
+      data-toggle="collapse" data-target="#AddEditTask">Add Group</button>
 
     {# Task edit / new task form #}
     <div id="AddEditTask" class="collapse">
@@ -16,22 +16,22 @@
     <hr />
   {% endif %}
 
-  {% if tasks %}
+  {% if tasks or mygroups %}
     {% if list_slug == "mine" %}
-      <h1>Tasks assigned to me (in all groups)</h1>
+      <h1>Groups I am in (in all groups)</h1>
     {% else %}
-      <h1>{{ view_completed|yesno:"Completed tasks, Tasks" }} in "{{ task_list.name }}"</h1>
+      <h2>{{ view_completed|yesno:"Completed tasks, Groups" }} in "{{ task_list.name }}"</h2>
       <p><small><i>In workgroup "{{ task_list.group }}" - drag rows to set priorities.</i></small></p>
     {% endif %}
 
       <table class="table" id="tasktable">
         <tr class="nodrop">
-          <th>Task</th>
+          <th>Group</th>
           <th>Created</th>
-          <th>Due on</th>
-          <th>Owner</th>
-          <th>Assigned</th>
-          <th>Mark</th>
+          <th>Starting on</th>
+          <th>Admin</th>
+          <th>Memebers</th>
+          <th>Close Group</th>
         </tr>
 
         {% for task in tasks %}
@@ -53,6 +53,7 @@
             <td>
               {% if task.assigned_to %}{{ task.assigned_to }}{% else %}Anyone{% endif %}
             </td>
+        {% if  task.created_by == request.user %}
             <td>
               <form method="post" action="{% url "groups:task_toggle_done" task.id %}" role="form">
                 {% csrf_token %}
@@ -65,14 +66,55 @@
                 </button>
               </form>
             </td>
+            {% endif %}
           </tr>
+        {% endfor %}
+    
+      
+        {% for task in taskid %}
+        {% comment %} {% if task.id == taskid.task %} {% endcomment %}
+
+          <tr id="{{ task.task.id }}">
+            <td>
+                <a href="{% url 'groups:task_detail' task.task.id %}">{{ task.task.title|truncatewords:10 }}</a>
+            </td>
+            <td>
+                {{ task.task.created_date|date:"m/d/Y" }}
+            </td>
+            <td>
+              <span {% if task.task.overdue_status %}class="overdue"{% endif %}>
+                {{ task.task.due_date|date:"m/d/Y" }}
+              </span>
+            </td>
+            <td>
+              {{ task.task.created_by }}
+            </td>
+            <td>
+              {% if task.task.assigned_to %}{{ task.task.assigned_to }}{% else %}Anyone{% endif %}
+            </td>
+           {% if  task.task.created_by == request.username %}
+            <td>
+              <form method="post" action="{% url "groups:task_toggle_done" task.id %}" role="form">
+                {% csrf_token %}
+                <button class="btn btn-info btn-sm" type="submit" name="toggle_done">
+                  {% if view_completed %}
+                    Not Done
+                  {% else %}
+                    Done
+                  {% endif %}
+                </button>
+              </form>
+            </td>
+            {% endif %}
+          </tr>
+          {% comment %} {% endif %} {% endcomment %}
         {% endfor %}
       </table>
 
       {% include 'groups/include/toggle_delete.html' %}
 
   {% else %}
-    <h4>No tasks on this list yet (add one!)</h4>
+    <h4>No groups on this list yet (add one!)</h4>
     {% include 'groups/include/toggle_delete.html' %}
 
   {% endif %}
